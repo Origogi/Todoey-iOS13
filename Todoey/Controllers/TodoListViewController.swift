@@ -28,31 +28,10 @@ class TodoListViewController: UITableViewController {
         let newItem3 = Item()
         newItem3.title = "Destory Demogorgon"
         itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
 
-//
-//        if let items = defaults.array(forKey: "TodoList") as? [String] {
-//            itemArray = items
-//        }
+        if let items = defaults.array(forKey: "TodoList") as? [Item] {
+            itemArray = items
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -65,13 +44,8 @@ class TodoListViewController: UITableViewController {
         let item = itemArray[indexPath.row]
 
         cell.textLabel?.text = item.title
-        
 
-        if item.done == true {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+        cell.accessoryType = item.done ? .checkmark: .none
 
         return cell
     }
@@ -96,6 +70,8 @@ class TodoListViewController: UITableViewController {
             let newItem = Item()
             newItem.title = textField.text!
 
+            self.itemArray.append(newItem)
+            
             self.defaults.set(self.itemArray, forKey: "TodoList")
 
             self.tableView.reloadData()
