@@ -18,8 +18,10 @@ class TodoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
-//        loadItems()
+        loadItems()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -89,11 +91,14 @@ class TodoListViewController: UITableViewController {
             print("Error encoding item array \(error)")
         }
     }
-//
-//    func loadItems() {
-//        do {
-//        } catch {
-//            print(error)
-//        }
-//    }
+
+    func loadItems() {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        }
+        catch {
+            print(error)
+        }
+    }
 }
