@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  Todoey
-//
-//  Created by Philipp Muellauer on 02/12/2019.
-//  Copyright © 2019 App Brewery. All rights reserved.
-//
-
 import UIKit
 import CoreData
 
@@ -94,13 +86,32 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
 
-    func loadItems() {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
             itemArray = try context.fetch(request)
         }
         catch {
             print(error)
         }
+        self.tableView.reloadData()
+
+    }
+}
+
+// MARK: - Search bar methods
+
+extension TodoListViewController : UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+                
+        request.sortDescriptors = [NSSortDescriptor(key : "title" , ascending: true)]
+        
+        loadItems(with: request)
+        
+        tableView.reloadData()
+
     }
 }
