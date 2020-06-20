@@ -43,6 +43,7 @@ class TodoListViewController: UITableViewController {
     // MARK: - TableView Delegate Methods
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
 
         saveItems()
@@ -90,6 +91,7 @@ class TodoListViewController: UITableViewController {
         } catch {
             print("Error encoding item array \(error)")
         }
+        self.tableView.reloadData()
     }
 
     func loadItems() {
