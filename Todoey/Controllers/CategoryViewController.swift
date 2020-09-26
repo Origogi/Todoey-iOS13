@@ -14,8 +14,6 @@ class CategoryViewController: UITableViewController {
     
     let realm = try! Realm()
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -73,7 +71,6 @@ class CategoryViewController: UITableViewController {
     }
     
     // MARK: - Data Manupulation Methods
-    
     func save(category: Category) {
         do {
             try realm.write {
@@ -88,9 +85,7 @@ class CategoryViewController: UITableViewController {
     
     func loadCategories() {
         categories = realm.objects(Category.self)
-        
         tableView.reloadData()
     }
-    
     // MARK: - TableView Datasource Methods
 }
