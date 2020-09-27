@@ -1,7 +1,7 @@
 import RealmSwift
 import UIKit
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     var realm = try! Realm()
 
@@ -16,6 +16,8 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        tableView.rowHeight = 80.0
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
     }
 
@@ -24,7 +26,7 @@ class TodoListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
@@ -97,15 +99,26 @@ class TodoListViewController: UITableViewController {
 
         tableView.reloadData()
     }
+
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    realm.delete(item)
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
 
 // MARK: - Search bar methods
 
 extension TodoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
-        
+
         tableView.reloadData()
     }
 
@@ -116,7 +129,6 @@ extension TodoListViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-
         }
     }
 }
